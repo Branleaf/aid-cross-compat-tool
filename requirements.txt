@@ -1,0 +1,8 @@
+pysimplegui
+json
+requests
+os
+re
+logging
+dotenv
+transformers
