@@ -7,9 +7,6 @@ logging.getLogger("transformers.tokenization_utils_base").setLevel(logging.ERROR
 
 tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
-aid_button = "assets/aidungeon.png"
-nai_button = "assets/novelai.png"
-
 # AID API functionality
 load_dotenv()
 xaccess = os.getenv("xaccess")
@@ -53,11 +50,11 @@ def fetch_world_info(publicid:str, type:str):
 
 # scenario loading functions
 def assemble_from_aid_scenario(scenario, worldinfo):
-    if scenario['tags'] is None: scenario['tags'] = []
+    scenario.setdefault("tags", [])
     if scenario['memory'] is None: scenario['memory'] = ""
     if scenario['authorsNote'] is None: scenario['authorsNote'] = ""
     # adventure?
-    if "actionCount" in scenario.keys():
+    if "actionCount" in scenario:
         scenario['type'] = "adventure"
         scenario['actionWindow'].reverse()
         scenario['prompt'] = ""
@@ -118,7 +115,7 @@ def display_tags(tags:list):
     for t in range(len(tags)):
         tagstring += f" [{tags[t]}]"
     tagstring = tagstring.lstrip()
-    if len(tagstring) == 0: tagstring = "(no tags)"
+    if not tagstring: tagstring = "(no tags)"
     return tagstring
 
 def fetch_nai_scenario(filepath:str):
@@ -146,7 +143,7 @@ def assemble_wi_from_nai(data):
     new_wi = []
     for x in range(len(worldinfo)):
         # if there's no name for it, just set it to key #1
-        if len(worldinfo[x]['displayName']) <= 0: worldinfo[x]['displayName'] = worldinfo[x]['keys'][0]
+        if not worldinfo[x]['displayName']: worldinfo[x]['displayName'] = worldinfo[x]['keys'][0]
         new_wi.append({"name": worldinfo[x]['displayName'], "keys": worldinfo[x]['keys'], "entry": worldinfo[x]['text']})
     return new_wi
 
@@ -282,7 +279,7 @@ def build_nai_action_window(actions):
             "data": "",
             "origin": "root"
             })
-    for a in range(0, len(actions)):
+    for a in range(len(actions)):
         # determine origin
         if a == 1: origin = "prompt"
         elif ">" in actions[a]['text'][:3]: origin = "user"
