@@ -1,11 +1,11 @@
 import PySimpleGUI as sg
 import json, requests, os, re, logging
 from dotenv import load_dotenv
-from transformers import GPT2Tokenizer
+from transformers import GPT2TokenizerFast
 # so it doesn't warn about the tokenizer tokenizing something too long for a model we aren't planning to feed anything to
 logging.getLogger("transformers.tokenization_utils_base").setLevel(logging.ERROR)
 
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
+tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
 aid_button = "assets/aidungeon.png"
 nai_button = "assets/novelai.png"
@@ -28,7 +28,7 @@ def fetch_scenario(publicid:str):
         return json_resp['data']['scenario']
 
 def fetch_adventure(publicid:str):
-    resp = requests.post(url, f'{{"operationName":"AdventureViewScreenGetAdventure","variables":{{"publicId":"{publicid}","limit":10000,"offset":0,"desc":false}},"query":"query AdventureViewScreenGetAdventure($publicId: String, $limit: Int, $offset: Int, $desc: Boolean) {{ adventure(publicId: $publicId) {{ actionCount actionWindow(limit: $limit, offset: $offset, desc: $desc) {{ text }} ...ContentHeadingSearchable }}}}fragment ContentHeadingSearchable on Searchable {{ title description tags }}"}}', headers = headers)
+    resp = requests.post(url, f'{{"operationName":"AdventureViewScreenGetAdventure","variables":{{"publicId":{json.dumps(publicid)},"limit":50000,"offset":0,"desc":false}},"query":"query AdventureViewScreenGetAdventure($publicId: String, $limit: Int, $offset: Int, $desc: Boolean) {{ adventure(publicId: $publicId) {{ actionCount actionWindow(limit: $limit, offset: $offset, desc: $desc) {{ text }} ...ContentHeadingSearchable }}}}fragment ContentHeadingSearchable on Searchable {{ title description tags }}"}}', headers = headers)
     json_resp = resp.json()
     #print(json_resp)
     if "errors" in json_resp.keys():
@@ -38,7 +38,7 @@ def fetch_adventure(publicid:str):
 
 def fetch_adventure_extras(publicid:str):
     # gets memory/AN from an adventure
-    resp = requests.post(url, f'{{"operationName":"ActionContextGetAdventureAction","variables":{{"publicId":"{publicid}"}},"query":"query ActionContextGetAdventureAction($publicId: String) {{ adventure(publicId: $publicId) {{memory authorsNote}}}}"}}', headers = headers)
+    resp = requests.post(url, f'{{"operationName":"ActionContextGetAdventureAction","variables":{{"publicId":{json.dumps(publicid)}}},"query":"query ActionContextGetAdventureAction($publicId: String) {{ adventure(publicId: $publicId) {{memory authorsNote}}}}"}}', headers = headers)
     json_resp = resp.json()
     if "errors" in json_resp.keys():
         return None, json_resp['errors']
