@@ -112,9 +112,10 @@ def count_tokens(text):
 
 def display_tags(tags:list):
     tagstring = ""
-    for t in range(len(tags)):
-        tagstring += f" [{tags[t]}]"
-    tagstring = tagstring.lstrip()
+    if tags:
+        for t in range(len(tags)):
+            tagstring += f" [{tags[t]}]"
+        tagstring = tagstring.lstrip()
     if not tagstring: tagstring = "(no tags)"
     return tagstring
 
