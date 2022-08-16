@@ -9,10 +9,10 @@ tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
 # AID API functionality
 load_dotenv()
-xaccess = os.getenv("xaccess")
+auth = os.getenv("authorization") # previously x-access token
 url = "http://api.aidungeon.io/graphql"
 headers = {
-    'X-Access-Token': xaccess,
+    'authorization': f"session {auth}",
     'content-type': 'application/json'
 }
 

@@ -1,12 +1,12 @@
 # aid-cross-compat-tool
 allows converting of ai dungeon content to novelai .scenario and vice versa. also known as AIDCCT/AID-CCT/it's not AIDCAT please don't get them mixed up
 
-i made this for a latitude hackathon and fixed (worked around) a bug with adventure to .story conversion that would cause them to basically brick your NAI account if you tried to import them. that doesn't happen any more but there are _some_ things that i can't really do much about - those are detailed further down though
+i made this for a latitude hackathon and fixed (worked around) a bug with adventure to .story conversion that would cause them to basically brick your NAI account if you tried to import them. that doesn't happen any more (since you just have to export adventures to .scenario but it shouldn't cause anything to be lost) but there are _some_ things that i can't really do much about - those are detailed further down though
 
 ## how to use
 * make sure you have the right modules installed. i wrote this in python 3.9 so if you're sure you have everything installed but you're using a different python version that might be the issue
-* make a .env file in the repo's folder that looks like: `xaccess = "x-access-token-goes-here-lol"`
-* set `xaccess` to your AID account's x-access token, found in the request headers tab when viewing any JSON formatted request on the AID site. **this may get deprecated in the future so when that happens i'll have to rewrite the bit of code to do auth, but until i do the program won't work.**
+* make a .env file in the repo's folder that looks like: `authorization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`
+* set `authorization` to your current session token, found in the request headers tab when viewing any JSON formatted request on the AID site.
 * launch run.py and you're good to go
 
 ## known issues/limitations
