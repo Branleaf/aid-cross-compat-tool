@@ -9,16 +9,26 @@ tokenizer = GPT2TokenizerFast.from_pretrained("gpt2")
 
 # AID API functionality
 load_dotenv()
-auth = os.getenv("authorization") # previously x-access token
+# auth is completely different now, woo.
+user_email = os.getenv("email")
+user_pass = os.getenv("password")
+auth_url = "https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBJJSL9pvAZ4llQWavd565hXGrCpHppJj8"
 url = "http://api.aidungeon.io/graphql"
 headers = {
-    'authorization': f"session {auth}",
     'content-type': 'application/json'
 }
+
+def fetch_firebase_token():
+    resp = requests.post(auth_url, f'{{"returnSecureToken":true,"email":{json.dumps(user_email)},"password":{json.dumps(user_pass)}}}', headers = headers)
+    # convert response to json so i can actually read the token
+    json_resp = resp.json()
+    # and add the received token to the headers for the AID API requests to use
+    headers.update({"authorization":f"firebase {json_resp['idToken']}"})
 
 def fetch_scenario(publicid:str):
     resp = requests.post(url, f'{{"operationName":"ScenarioEditScreenGetScenario","variables":{{"publicId":{json.dumps(publicid)}}},"query":"query ScenarioEditScreenGetScenario($publicId: String) {{ scenario(publicId: $publicId) {{ ...ScenarioEditScenario }}}}fragment ScenarioEditScenario on Scenario {{description memory authorsNote prompt tags title options {{publicId}}}}"}}', headers = headers)
     json_resp = resp.json()
+    #print(json_resp)
     if "errors" in json_resp.keys():
         return None
     else:
@@ -636,6 +646,8 @@ def main_window():
     window.close()
 
 def main():
+    # get a firebase auth token before anything else
+    fetch_firebase_token()
     main_window()
 
 if __name__ == "__main__":

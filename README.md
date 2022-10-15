@@ -5,8 +5,10 @@ i made this for a latitude hackathon and fixed (worked around) a bug with advent
 
 ## how to use
 * make sure you have the right modules installed. i wrote this in python 3.9 so if you're sure you have everything installed but you're using a different python version that might be the issue
-* make a .env file in the repo's folder that looks like: `authorization = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"`
-* set `authorization` to your current session token, found in the request headers tab when viewing any JSON formatted request on the AID site.
+* make a .env file in the repo's folder that has two lines like so:
+* `email = "youremailaddress@gmail.com"`
+* `password = "password"`
+* set `email` and `password` to whatever your account's email address and password is. the tool has to authenticate as if it was you to get all of your content's info
 * launch run.py and you're good to go
 
 ## known issues/limitations
